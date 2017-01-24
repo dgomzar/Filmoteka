@@ -2,36 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dodawanie filmu</title>
 
-        Tytuł oryginalny:</br>
-        <input type="text" name="org_title"></br>
+    <form action="{% url 'main_page:add_movie' %}" method="post" style="text-align: center">
+        {% csrf_token %}
+        <title>Dodawanie filmu</title>
 
-        Tytuł przetłumaczony:</br>
-        <input type="text" name="title"></br>
+            Tytuł oryginalny:</br>
+            <input type="text" required name="org_title"></br>
 
-        Reżyseria:</br>
-        <input type="text" name="director"></br>
+            Tytuł przetłumaczony:</br>
+            <input type="text" name="title"></br>
 
-        Scenariusz:</br>
-        <input type="text" name="writer"></br>
+            Reżyseria:</br>
+            <input type="text" name="director"></br>
 
-        Gatunek:</br>
-        <input type="text" name="genres"></br>
+            Scenariusz:</br>
+            <input type="text" name="writer"></br>
 
-        Produkcja:</br>
-        <input type="text" name="producer"></br>
+            Gatunek:</br>
+            <input type="text" name="genres"></br>
 
-        Rok produkcji:</br>
-        <input type="text" name="release_year"></br>
+            Produkcja:</br>
+            <input type="text" name="producer"></br>
 
-        Ocena na filmweb:</br>
-        <input type="text" name="filmweb_rate"></br>
+            Rok produkcji:</br>
+            <input type="text" name="release_year"></br>
 
-        Opis:</br>
-        <textarea type="text" rows="5" cols="50" name="description"></textarea></br>
+            Ocena na filmweb:</br>
+            <input type="text" name="filmweb_rate"></br>
+
+            Opis:</br>
+            <textarea type="text" rows="5" cols="50" name="description"></textarea></br>
         </br>
-
+    <input type="submit" name="newMovie" value="Dodaj"/>
+    </form>
 
 </head>
 <body>
