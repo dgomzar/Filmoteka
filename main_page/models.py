@@ -15,4 +15,3 @@ class Movie(models.Model):
     release_year = models.CharField(max_length=5, blank=True, null=True, verbose_name=(u"Rok produkcji"))
     description = models.CharField(max_length=1000, blank=True, verbose_name=(u"Opis"))
     filmweb_rate = models.CharField(max_length=10, blank=True, null=True, verbose_name=(u"Ocena z filmwebu"))
-
