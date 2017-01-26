@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Dodawanie filmu</title>
 </head>
 <body>
     <form action="{% url 'main_page:do_action' %}" method="post" style="text-align: center">
         {% csrf_token %}
-        <title>Dodawanie filmu</title>
 
             Tytuł oryginalny:</br>
             <input type="text" required name="org_title" value="{% if movie %}{{ movie.org_title }}{% endif %}"></br>

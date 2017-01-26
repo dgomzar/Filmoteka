@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.views import generic
 from .models import Movie
 from . import parser_filmweb
 
@@ -36,7 +37,7 @@ def addMovie(request):
     newMovie.description = request.POST['description']
     newMovie.filmweb_rate = request.POST['filmweb_rate']
     newMovie.save()
-    return HttpResponse("Dodano film.")
+    return HttpResponseRedirect(reverse('main_page:view_movie', args=(newMovie.pk,)))
 
 def getFilmwebData(request):
     org_title = request.POST['org_title']
@@ -58,3 +59,7 @@ def doAction(request):
         return getFilmwebData(request)
     elif 'addNewMovie' in request.POST:
         return addMovie(request)
+
+class ViewMovie(generic.DetailView):
+    model = Movie
+    template_name = 'main_page/view_movie.html'

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Informacje o filmie</title>
+</head>
+<body>
+    <h1 style="text-align: center">
+             {{ movie.org_title }}
+    </h1>
+
+    <h4>
+            {{ movie.description}}
+    </h4>
+
+     <table style="width:80%; border-bottom: solid; border-top: solid; border-left: solid; border-right: solid; margin-left: auto; margin-right: auto">
+        <tr>
+            <td>
+                Tytuł przetłumaczony
+            </td>
+            <td>
+                {{ movie.title }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Reżyseria
+            </td>
+            <td>
+                {{ movie.director }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Scenariusz
+            </td>
+            <td>
+                {{ movie.writer}}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Gatunek
+            </td>
+            <td>
+                {{ movie.genres}}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Produkcja
+            </td>
+            <td>
+                {{ movie.producer}}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Rok produkcji
+            </td>
+            <td>
+                {% if movie.release_year %}
+                    {{ movie.release_year}}
+                {% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Ocena na filmweb
+            </td>
+            <td>
+                {% if movie.filmweb_rate %}
+                    {{ movie.filmweb_rate}}
+                {% endif %}
+            </td>
+        </tr>
+
+    </table>
+
+    </br>
+</body>
+</html>
