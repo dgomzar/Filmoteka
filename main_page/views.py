@@ -8,6 +8,12 @@ from . import parser_filmweb
 
 # Create your views here.
 
+class IndexView(generic.ListView):
+    template_name = 'main_page/index.html'
+    context_object_name = 'movies'
+    def get_queryset(self):
+        return Movie.objects.order_by('org_title')
+
 def newMovie(request):
     if 'fromFilmweb' in request.session:
         del request.session['fromFilmweb']
