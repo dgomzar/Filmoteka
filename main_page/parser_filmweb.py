@@ -41,15 +41,15 @@ def __parse(url):
     root = html.fromstring(connection.read())
     movie = Movie()
 
-    title_path = '//div[@class="filmMainHeader"]//h1[@class="inline filmTitle"]/a'
+    title_path = '//h1[@class="inline filmTitle"]/a'
     org_title_path = '//div[@class="filmMainHeader"]//h2'
-    director_path = '//div[@class="filmMainHeader"]//div[@class="filmInfo bottom-15"]/table//tr[contains(th, "yseria:")]/td//li'
-    writer_path = '//div[@class="filmMainHeader"]//div[@class="filmInfo bottom-15"]/table//tr[contains(th, "scenariusz:")]/td//li'
-    genres_path = '//div[@class="filmMainHeader"]//div[@class="filmInfo bottom-15"]/table//tr[contains(th, "gatunek:")]/td//li'
-    producer_path = '//div[@class="filmMainHeader"]//div[@class="filmInfo bottom-15"]/table//tr[contains(th, "produkcja:")]/td//li'
-    release_year_path = '//div[@class="filmMainHeader"]//span[@class="halfSize"]'
-    description_path = '//div[@class="filmMainHeader"]/div[@class="filmPlot bottom-15"]/p'
-    rate_path = '//div[@class="filmVoteRatingPanelWrapper "]//span[@property="v:average"]'
+    director_path = '//tr[contains(th, "yseria:")]/td'
+    writer_path = '//tr[contains(th, "scenariusz:")]/td'
+    genres_path = '//tr[contains(th, "gatunek:")]/td'
+    producer_path = '//tr[contains(th, "produkcja:")]/td'
+    release_year_path = '//span[@class="halfSize"]'
+    description_path = '//div[@class="filmPlot bottom-15"]/p'
+    rate_path = '//span[@property="v:average"]'
 
     movie.title = __getText(root, title_path)
     movie.org_title = __getText(root, org_title_path)
@@ -60,23 +60,31 @@ def __parse(url):
     movie.release_year = __getText(root, release_year_path)
     movie.description = __getText(root, description_path)
     movie.rate = __getText(root, rate_path)
-    movie.rate = movie.rate[1:]
 
-    movie.release_year = movie.release_year[1:]
-    movie.release_year = movie.release_year[:len(movie.release_year)-2]
+    # remove spaces
+    movie.rate = movie.rate.strip()
+    movie.release_year = movie.release_year.strip()
+
+    # remove parenthesis
+    movie.release_year = movie.release_year.replace('(', '')
+    movie.release_year = movie.release_year.replace(')', '')
+
+    # when polish title is original title
+    if (not movie.org_title):
+        movie.org_title = movie.title
+        movie.title = ""
 
     return movie
 
-
 def __getText(root, xpath):
-    elems = root.xpath(xpath)
-    if len(elems) == 1:
-        return elems[0].text_content()
-    elif len(elems) > 1:
-        my_string = ''
-        for g in elems:
-            my_string = my_string + g.text_content() + ', '
-        my_string = my_string[:len(my_string) - 2] # without last comma and space
-        return my_string
-    else:
-        return ''
+    entities = root.xpath(xpath + "//li")
+    if(not entities):
+        entities = root.xpath(xpath)
+    result_string = ''
+    if len(entities) == 1:
+        result_string = entities[0].text_content()
+    elif len(entities) > 1:
+        for e in entities:
+            result_string = result_string + e.text_content() + ', '
+        result_string = result_string[:len(result_string) - 2] # without last comma and space
+    return result_string
