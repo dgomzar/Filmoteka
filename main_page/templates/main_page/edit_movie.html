@@ -2,12 +2,12 @@
 
 {% block content %}
 
-    <form action="{% url 'main_page:do_action' 0 %}" method="post" style="text-align: center">
+    <form action="{% url 'main_page:do_action' movie.id %}" method="post" style="text-align: center">
         {% csrf_token %}
 
         {% include 'main_page/movie_input_field_part.html' %}
 
-        <input type="submit" name="addNewMovie" value="Dodaj"/>
+        <input type="submit" name="updateMovie" value="Zapisz zmiany"/>
     </form>
 
 {% endblock %}

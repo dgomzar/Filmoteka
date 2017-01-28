@@ -1,0 +1,31 @@
+{% block input_field %}
+            Tytuł oryginalny:</br>
+            <input type="text" required name="org_title" value="{% if movie %}{{ movie.org_title }}{% endif %}"></br>
+
+            <button id="getFilmWeb" name="newMovieFromFilmweb" value="getFilmWeb">Pobierz dane z filmweb</button></br>
+
+            Tytuł przetłumaczony:</br>
+            <input type="text" name="title" value="{% if movie %}{{ movie.title }}{% endif %}"></br>
+
+            Reżyseria:</br>
+            <input type="text" name="director" value="{% if movie %}{{ movie.director }}{% endif %}"></br>
+
+            Scenariusz:</br>
+            <input type="text" name="writer" value="{% if movie %}{{ movie.writer }}{% endif %}"></br>
+
+            Gatunek:</br>
+            <input type="text" name="genres" value="{% if movie %}{{ movie.genres }}{% endif %}"></br>
+
+            Produkcja:</br>
+            <input type="text" name="producer" value="{% if movie %}{{ movie.producer }}{% endif %}"></br>
+
+            Premiera:</br>
+            <input type="text" name="release_year" value="{% if movie %}{{ movie.release_year }}{% endif %}"></br>
+
+            Ocena na filmweb:</br>
+            <input type="text" name="filmweb_rate" value="{% if movie %}{{ movie.filmweb_rate }}{% endif %}"></br>
+
+            Opis:</br>
+            <textarea type="text" rows="5" cols="50" name="description">{% if movie %}{{ movie.description }}{% endif %}</textarea></br>
+        </br>
+{% endblock %}
