@@ -13,7 +13,7 @@ class Movie:
     description = ''
     rate = ''
 
-    def printAll(self):
+    def print_all(self):
         print "title: ", self.title
         print "org_title: ", self.org_title
         print "director: ", self.director
@@ -24,7 +24,7 @@ class Movie:
         print "description: ", self.description
         print "rate: ", self.rate
 
-def getMovieFromFilmweb(title):
+def get_movie_from_filmweb(title):
     searchLink = 'http://www.filmweb.pl/search?q='
     titleWithoutSpaces = title.replace(' ', '+')
     urlSearch = searchLink + titleWithoutSpaces
@@ -32,7 +32,14 @@ def getMovieFromFilmweb(title):
     root = html.fromstring(connection.read())
 
     firstMovieFromSearchPath = '//ul[@class="sep-hr resultsList"]/li[1]//h3/a'
-    movieLink = 'http://www.filmweb.pl' + root.xpath(firstMovieFromSearchPath)[0].attrib['href']
+    firstMovieFromSearchLink = root.xpath(firstMovieFromSearchPath)
+    if not firstMovieFromSearchLink:
+        # return an empty object when there is no any result
+        movie = Movie()
+        movie.org_title = title
+        return movie
+
+    movieLink = 'http://www.filmweb.pl' + firstMovieFromSearchLink[0].attrib['href']
 
     return __parse(movieLink)
 
@@ -51,15 +58,15 @@ def __parse(url):
     description_path = '//div[@class="filmPlot bottom-15"]/p'
     rate_path = '//span[@property="v:average"]'
 
-    movie.title = __getText(root, title_path)
-    movie.org_title = __getText(root, org_title_path)
-    movie.director = __getText(root, director_path)
-    movie.writer = __getText(root, writer_path)
-    movie.genres = __getText(root, genres_path)
-    movie.producer = __getText(root, producer_path)
-    movie.release_year = __getText(root, release_year_path)
-    movie.description = __getText(root, description_path)
-    movie.rate = __getText(root, rate_path)
+    movie.title = __get_text_content(root, title_path)
+    movie.org_title = __get_text_content(root, org_title_path)
+    movie.director = __get_text_content(root, director_path)
+    movie.writer = __get_text_content(root, writer_path)
+    movie.genres = __get_text_content(root, genres_path)
+    movie.producer = __get_text_content(root, producer_path)
+    movie.release_year = __get_text_content(root, release_year_path)
+    movie.description = __get_text_content(root, description_path)
+    movie.rate = __get_text_content(root, rate_path)
 
     # remove spaces
     movie.rate = movie.rate.strip()
@@ -76,7 +83,7 @@ def __parse(url):
 
     return movie
 
-def __getText(root, xpath):
+def __get_text_content(root, xpath):
     entities = root.xpath(xpath + "//li")
     if(not entities):
         entities = root.xpath(xpath)

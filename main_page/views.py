@@ -16,56 +16,32 @@ class IndexView(generic.ListView):
         return Movie.objects.order_by('org_title')
 
 
-def newMovie(request):
+def new_movie(request):
     if 'fromFilmweb' in request.session:
         del request.session['fromFilmweb']
         movie = Movie()
-        movie.org_title = request.session['org_title']
-        movie.title = request.session['title']
-        movie.director = request.session['director']
-        movie.writer = request.session['writer']
-        movie.genres = request.session['genres']
-        movie.producer = request.session['producer']
-        movie.release_year = request.session['release_year']
-        movie.description = request.session['description']
-        movie.filmweb_rate = request.session['filmweb_rate']
+        set_up_essential_movie_data(movie, request.session)
         return render(request, 'main_page/new_movie.html', {'movie': movie})
     return render(request, 'main_page/new_movie.html')
 
 
-def addMovie(request):
-    newMovie = Movie()
-    newMovie.org_title = request.POST['org_title']
-    newMovie.title = request.POST['title']
-    newMovie.director = request.POST['director']
-    newMovie.writer = request.POST['writer']
-    newMovie.genres = request.POST['genres']
-    newMovie.producer = request.POST['producer']
-    newMovie.release_year = request.POST['release_year']
-    newMovie.description = request.POST['description']
-    newMovie.filmweb_rate = request.POST['filmweb_rate']
-    newMovie.save()
-    return HttpResponseRedirect(reverse('main_page:view_movie', args=(newMovie.pk,)))
-
-
-def updateMovie(request, pk):
-    movie = Movie.objects.get(pk=pk)
-    movie.org_title = request.POST['org_title']
-    movie.title = request.POST['title']
-    movie.director = request.POST['director']
-    movie.writer = request.POST['writer']
-    movie.genres = request.POST['genres']
-    movie.producer = request.POST['producer']
-    movie.release_year = request.POST['release_year']
-    movie.description = request.POST['description']
-    movie.filmweb_rate = request.POST['filmweb_rate']
+def add_movie(request):
+    movie = Movie()
+    set_up_essential_movie_data(movie, request.POST)
     movie.save()
     return HttpResponseRedirect(reverse('main_page:view_movie', args=(movie.pk,)))
 
 
-def getFilmwebData(request, pk):
+def update_movie(request, pk):
+    movie = Movie.objects.get(pk=pk)
+    set_up_essential_movie_data(movie, request.POST)
+    movie.save()
+    return HttpResponseRedirect(reverse('main_page:view_movie', args=(movie.pk,)))
+
+
+def get_filmweb_data(request, pk):
     org_title = request.POST['org_title']
-    movie = parser_filmweb.getMovieFromFilmweb(org_title)
+    movie = parser_filmweb.get_movie_from_filmweb(org_title)
     request.session['org_title'] = movie.org_title
     request.session['title'] = movie.title
     request.session['director'] = movie.director
@@ -82,13 +58,13 @@ def getFilmwebData(request, pk):
         return HttpResponseRedirect(reverse('main_page:edit_movie', args=(pk,)))
 
 
-def doAction(request, pk):
+def do_action(request, pk):
     if 'newMovieFromFilmweb' in request.POST:
-        return getFilmwebData(request, pk)
+        return get_filmweb_data(request, pk)
     elif 'addNewMovie' in request.POST:
-        return addMovie(request)
+        return add_movie(request)
     elif 'updateMovie' in request.POST:
-        return updateMovie(request, pk)
+        return update_movie(request, pk)
 
 
 class ViewMovie(generic.DetailView):
@@ -96,22 +72,27 @@ class ViewMovie(generic.DetailView):
     template_name = 'main_page/view_movie.html'
 
 
-def removeMovie(request, pk):
+def remove_movie(request, pk):
     movie = Movie.objects.get(pk=pk)
     movie.delete()
     return HttpResponseRedirect(reverse('main_page:index'))
 
-def editMovie(request, pk):
+
+def edit_movie(request, pk):
     movie = Movie.objects.get(pk=pk)
     if 'fromFilmweb' in request.session:
         del request.session['fromFilmweb']
-        movie.org_title = request.session['org_title']
-        movie.title = request.session['title']
-        movie.director = request.session['director']
-        movie.writer = request.session['writer']
-        movie.genres = request.session['genres']
-        movie.producer = request.session['producer']
-        movie.release_year = request.session['release_year']
-        movie.description = request.session['description']
-        movie.filmweb_rate = request.session['filmweb_rate']
+        set_up_essential_movie_data(movie, request.session)
     return render(request, 'main_page/edit_movie.html', {'movie' : movie})
+
+
+def set_up_essential_movie_data(movie, container):
+    movie.org_title = container['org_title']
+    movie.title = container['title']
+    movie.director = container['director']
+    movie.writer = container['writer']
+    movie.genres = container['genres']
+    movie.producer = container['producer']
+    movie.release_year = container['release_year']
+    movie.description = container['description']
+    movie.filmweb_rate = container['filmweb_rate']
