@@ -31,7 +31,7 @@ def get_movie_from_filmweb(title):
     connection = urllib.urlopen(urlSearch)
     root = html.fromstring(connection.read())
 
-    firstMovieFromSearchPath = '//ul[@class="sep-hr resultsList"]/li[1]//h3/a'
+    firstMovieFromSearchPath = '//ul[@class="resultsList hits"]/li[1]//div[contains(@class, "filmPreview__titleDetails")]/a'
     firstMovieFromSearchLink = root.xpath(firstMovieFromSearchPath)
     if not firstMovieFromSearchLink:
         # return an empty object when there is no any result
